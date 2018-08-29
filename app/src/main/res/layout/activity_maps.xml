@@ -6,36 +6,21 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".MapsActivity">
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <Button
-            android:onClick="Normal"
-            android:textAllCaps="false"
-            android:text="Normal"
+        <EditText
+            android:id="@+id/ed_search"
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <Button
-            android:onClick="Hybrid"
+            android:onClick="SearchLocation"
             android:textAllCaps="false"
-            android:text="Hybrid"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <Button
-            android:onClick="Satellite"
-            android:textAllCaps="false"
-            android:text="Satellite"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <Button
-            android:onClick="Terrain"
-            android:textAllCaps="false"
-            android:text="Terrain"
-            android:layout_weight="1"
+            android:text="Search"
+            android:layout_weight="2.5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>

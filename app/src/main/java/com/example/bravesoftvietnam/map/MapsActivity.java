@@ -11,39 +11,22 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.EditText;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -70,13 +53,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
     }
+
 
     public void startGpsUpdate(Context context) {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -106,7 +85,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onLocationChanged(Location location) {
                 longitude = location.getLongitude();
                 latitude = location.getLatitude();
-                getAddress(longitude,latitude);
+                getAddress(longitude, latitude);
 
             }
 
@@ -124,13 +103,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onProviderDisabled(String s) {
 
 
-
             }
         });
 
     }
 
-    private void getAddress(double longitude,double latitude){
+    private void getAddress(double longitude, double latitude) {
         Geocoder geocoder;
         List<Address> addresses;
         geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
@@ -145,13 +123,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 country = addresses.get(0).getCountryName();//QG
                 postalCode = addresses.get(0).getPostalCode();//Null
                 knownName = addresses.get(0).getFeatureName();//Number address
-                Log.d("ttt",address+"\n"+city+"\n"+state+"\n"+country+"\n"+postalCode+"\n"+knownName);
+                Log.d("ttt", address + "\n" + city + "\n" + state + "\n" + country + "\n" + postalCode + "\n" + knownName);
 
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
@@ -169,25 +148,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final AlertDialog alert = builder.create();
         alert.show();
     }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng sydney = new LatLng(latitude, longitude);
         mMap.addMarker(new MarkerOptions().position(sydney).title(address));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude), 15));
-
-
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 15));
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
             @Override
             public void onMapClick(LatLng point) {
                 // TODO Auto-generated method stub
                 //lstLatLngs.add(point);
-               // mMap.clear();
-                getAddress(point.longitude,point.latitude);
+                // mMap.clear();
+                getAddress(point.longitude, point.latitude);
                 mMap.addMarker(new MarkerOptions().position(point).title(address));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(point.latitude,point.longitude), 15));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(point.latitude, point.longitude), 15));
                 double distance;
                 Location locationA = new Location("");
                 locationA.setLatitude(latitude);
@@ -195,31 +173,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Location locationB = new Location("");
                 locationB.setLatitude(point.latitude);
                 locationB.setLongitude(point.longitude);
-                distance = locationA.distanceTo(locationB)/1000;
-                Log.d("kkk",String.format("%.1f",distance));
+                distance = locationA.distanceTo(locationB) / 1000;
+                Log.d("kkk", String.format("%.1f", distance));
             }
         });
     }
 
-
-    public void Normal(View view) {
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude), 15));
+    public void SearchLocation(View view) {
+        EditText edt = findViewById(R.id.ed_search);
+        if (!edt.getText().toString().isEmpty()) {
+            GetLoctionFromAddress fromAddress = new GetLoctionFromAddress(mMap, edt.getText().toString());
+            fromAddress.execute();
+        }
     }
-
-    public void Hybrid(View view) {
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude), 15));
-    }
-
-    public void Satellite(View view) {
-        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude), 15));
-    }
-
-    public void Terrain(View view) {
-        mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude), 15));
-    }
-
 }
