@@ -31,7 +31,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
+    //https://www.journaldev.com/13373/android-google-map-drawing-route-two-points
+    //https://maps.googleapis.com/maps/api/directions/json?origin=10.792533,106.653009&destination=10.7784471,106.6651842&sensor=false&mode=driving
     private GoogleMap mMap;
     private LocationManager locationManager;
     private double longitude, latitude;
@@ -153,6 +154,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng sydney = new LatLng(latitude, longitude);
+        Log.d("hhhh",latitude +"\n" +longitude);
         mMap.addMarker(new MarkerOptions().position(sydney).title(address));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 15));

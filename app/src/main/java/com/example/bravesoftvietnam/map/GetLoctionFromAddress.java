@@ -24,7 +24,6 @@ import java.net.URL;
 import java.util.List;
 
 public class GetLoctionFromAddress extends AsyncTask<Void, Void, JSONObject> {
-    //https://www.journaldev.com/13373/android-google-map-drawing-route-two-points
     GoogleMap googleMap;
     String address;
     public GetLoctionFromAddress(GoogleMap googleMap,String data) {
