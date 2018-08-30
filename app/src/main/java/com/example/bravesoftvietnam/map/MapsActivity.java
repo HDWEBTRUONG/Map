@@ -176,7 +176,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 locationB.setLatitude(point.latitude);
                 locationB.setLongitude(point.longitude);
                 distance = locationA.distanceTo(locationB) / 1000;
-                Log.d("kkk", String.format("%.1f", distance));
+                //String.format("%.1f", distance
             }
         });
     }
